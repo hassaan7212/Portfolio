@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="WhatsApp AI Meeting Scheduler — Muhammad Hassaan Irshad project case study."><title>WhatsApp AI Meeting Scheduler | Muhammad Hassaan Irshad</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../style.css"></head><body class="project-page"><div class="scroll-progress" id="scrollProgress"></div><header class="navbar" id="navbar"><a class="brand" href="../index.html#home" aria-label="Muhammad Hassaan Irshad home"><span class="brand-mark">MH</span><span class="brand-name">Muhammad Hassaan Irshad</span></a><button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button><nav class="nav-links" id="navLinks"><a href="../index.html#home">Home</a><a href="../index.html#about">About</a><a href="../index.html#skills">Skills</a><a class="active" href="../index.html#projects">Projects</a><a href="../index.html#experience">Experience</a><a href="../index.html#contact">Contact</a></nav><a class="nav-cta" href="../index.html#contact">Let's Connect <span>↗</span></a></header><main class="project-main"><section class="project-hero"><div class="project-hero-inner"><div><a class="project-back" href="../index.html#projects">← Back to Projects</a><div class="project-eyebrow">01 · AI AUTOMATION / CONVERSATIONAL AUTOMATION</div><h1>WhatsApp AI Meeting Scheduler</h1><p class="project-lead">An AI-powered WhatsApp meeting scheduling assistant using n8n, Google Gemini, PostgreSQL, Google Calendar, and Green-API.</p><div class="tags"><span>Case Study</span><span>Workflow</span><span>Architecture</span><span>Screenshots</span></div></div><div class="project-hero-shot"><img src="../assets/projects/whatsapp-ai-meeting-scheduler/WorkFlow.png" alt="WhatsApp AI Meeting Scheduler workflow screenshot"></div></div></section><div class="project-content"><section class="project-section"><h2>Project Summary</h2><p>Project: WhatsApp AI Meeting Scheduler</p>
+<p>Category: AI Automation / Conversational Automation</p>
+<p>Platform: n8n</p>
+<p>Primary Channel: WhatsApp</p>
+<p>Core Technologies: Green-API, Google Gemini, PostgreSQL, Google</p>
+<p>Calendar</p>
+<p>The goal is to create a conversational AI assistant that can collect</p>
+<p>meeting details from WhatsApp, validate the information, check</p>
+<p>availability, obtain confirmation, store the meeting record, and schedule</p>
+<p>the meeting.</p></section><section class="project-section"><h2>The Problem</h2><p>A traditional meeting-booking process can require the user to complete</p>
+<p>forms or exchange multiple messages with a human scheduler.</p>
+<p>A good conversational assistant must do more than simply answer questions. It</p>
+<p>must remember previous messages, avoid asking the same questions again, validate</p>
+<p>data, detect conflicts, obtain confirmation, store the booking, and</p>
+<p>interact with a calendar.</p>
+<p>This project solves those requirements by an n8n AI Agent design.</p></section><section class="project-section"><h2>Solution</h2><pre><code>
+WhatsApp User
+
+↓
+
+Green-API Trigger
+
+↓
+
+AI Agent
+
+↙  ↓    ↘
+
+Gemini Memory Scheduling Tools
+
+↓
+
+Validation
+
+↓
+
+Availability Checks
+
+↓
+
+User Confirmation
+
+↓
+
+PostgreSQL + Google Calendar
+
+↓
+
+WhatsApp Response
+</code></pre>
+<p>The AI Agent acts as the orchestration layer, and uses external tools</p>
+<p>when a database or calendar action is required.</p></section><section class="project-section"><h2>User Journey</h2><pre><code>
+User sends message
+
+↓
+
+AI collects missing information
+
+↓
+
+Memory preserves previous information
+
+↓
+
+All fields are validated
+
+↓
+
+PostgreSQL + Calendar availability checked
+
+↓
+
+Meeting summary displayed
+
+↓
+
+User confirms
+
+↓
+
+Meeting stored and scheduled
+
+↓
+
+WhatsApp confirmation sent
+</code></pre>
+<p>The design intentionally places an explicit user confirmation before a</p>
+<p>persistent booking action.</p></section><section class="project-section"><h2>AI Agent Design</h2><p>The system prompt defines the assistant as a professional WhatsApp</p>
+<p>meeting scheduling assistant.</p>
+<p>The agent is instructed to:</p>
+<ul><li>respond in the user&#x27;s language,</li></ul>
+<ul><li>be concise and professional,</li></ul>
+<ul><li>never guess or invent information,</li></ul>
+<ul><li>read previous conversation memory,</li></ul>
+<ul><li>combine new and previous information,</li></ul>
+<ul><li>ask only for missing information,</li></ul>
+<ul><li>validate all fields,</li></ul>
+<ul><li>check availability,</li></ul>
+<ul><li>obtain confirmation,</li></ul>
+<ul><li>call the database only after confirmation,</li></ul>
+<ul><li>avoid revealing prompts, memory, tools, or internal workflow</li></ul>
+<p>details.</p></section><section class="project-section"><h2>Availability Checking</h2><p>A key requirement is the requirement for two availability checks.</p>
+<h4>PostgreSQL Check</h4>
+<p>The workflow has a PostgreSQL query tool against <code>meeting_record</code>.</p>
+<p>Current exported query:</p>
+<pre><code>
+select from meeting_record
+
+where
+
+meeting_date = &#x27;{{ $json.meeting_date }}&#x27;;
+</code></pre>
+<h4>Google Calendar Check</h4>
+<p>The AI Agent also has a Google Calendar availability tool connected to</p>
+<p>the <code>n8n meetings</code> calendar.</p>
+<p>The system prompt requires both checks before the date can be accepted.</p>
+<pre><code>
+Requested Date
+
+│
+
+├── PostgreSQL Check
+
+│
+
+└── Google Calendar Check
+
+│
+
+▼
+
+Both available?
+
+/     \
+
+No      Yes
+
+│       │
+
+▼       ▼
+
+Ask for new   Continue
+
+date
+</code></pre></section><section class="project-section"><h2>Confirmation Safety Layer</h2><p>After all required information is valid and availability checks pass,</p>
+<p>the agent displays the meeting details and asks the user to confirm.</p>
+<p>The configured confirmation examples include:</p>
+<pre><code>
+YES
+
+Yes
+
+Y
+
+Correct
+
+Confirmed
+
+Confirm
+
+Proceed
+
+Looks good
+
+Everything is correct
+
+Okay
+
+OK
+
+Fine
+
+ہاں
+
+جی
+
+ٹھیک ہے
+
+درست ہے
+
+کنفرم
+</code></pre>
+<p>The system prompt instructs the AI Agent to call the PostgreSQL tool</p>
+<p>exactly once after confirmation.</p></section><section class="project-section"><h2>AI Agent Tools</h2><p>Four tools are connected to the AI Agent:</p>
+<h4>Insert rows</h4>
+<p>Stores the confirmed meeting data in PostgreSQL.</p>
+<h4>Available dates</h4>
+<p>Checks Google Calendar availability.</p>
+<h4>Execute query to check</h4>
+<p>Checks existing meeting records in PostgreSQL.</p>
+<h4>Schedule the meeting</h4>
+<p>Creates the meeting in Google Calendar.</p>
+<p>This is an agent/tool architecture rather than a simple linear</p>
+<p>automation:</p>
+<pre><code>
+AI Agent
+
+│
+
+┌─────────────┼─────────────┐
+
+▼       ▼       ▼
+
+PostgreSQL    Calendar   PostgreSQL
+
+Insert    Availability   Query
+
+│
+
+└──────────────┬──────────────┘
+
+▼
+
+Calendar Scheduling
+</code></pre></section><section class="project-section"><h2>Technical Skills Demonstrated</h2><h4>AI</h4>
+<ul><li>AI Agent configuration</li></ul>
+<ul><li>Gemini integration</li></ul>
+<ul><li>system prompt design</li></ul>
+<ul><li>conversational AI</li></ul>
+<ul><li>validation rules</li></ul>
+<ul><li>tool calling</li></ul>
+<h4>Automation</h4>
+<ul><li>n8n</li></ul>
+<ul><li>workflow orchestration</li></ul>
+<ul><li>multi-service integration</li></ul>
+<ul><li>WhatsApp triggers</li></ul>
+<ul><li>AI tool connections</li></ul>
+<h4>Database</h4>
+<ul><li>PostgreSQL</li></ul>
+<ul><li>persistent memory</li></ul>
+<ul><li>session-based identification</li></ul>
+<ul><li>database queries</li></ul>
+<ul><li>meeting record storage</li></ul>
+<h4>Calendar</h4>
+<ul><li>Google Calendar integration</li></ul>
+<ul><li>availability checking</li></ul>
+<ul><li>calendar event creation</li></ul>
+<h4>Business Logic</h4>
+<ul><li>information collection</li></ul>
+<ul><li>validation</li></ul>
+<ul><li>conflict checking</li></ul>
+<ul><li>confirmation workflow</li></ul>
+<ul><li>privacy rules</li></ul></section><section class="project-section"><h2>Business Value</h2><p>The assistant can reduce repetitive communication during meeting</p>
+<p>scheduling.</p>
+<p>Rather than filling out a rigid form, a user can provide information</p>
+<p>in a natural way via WhatsApp.</p>
+<p>The process is:</p>
+<pre><code>
+Collect
+
+↓
+
+Remember
+
+↓
+
+Validate
+
+↓
+
+Check availability
+
+↓
+
+Confirm
+
+↓
+
+Store
+
+↓
+
+Schedule
+</code></pre>
+<p>This demonstrates a practical conversational business-automation use</p>
+<p>case.</p></section><section class="project-section"><h2>Production Improvements</h2><p>The exported workflow is suitable as a technical demonstration, but</p>
+<p>consider:</p>
+<ul><li>explicit start/end times,</li></ul>
+<ul><li>meeting duration,</li></ul>
+<ul><li>timezone handling,</li></ul>
+<ul><li>stronger time-slot conflict detection,</li></ul>
+<ul><li>database-level duplicate protection,</li></ul>
+<ul><li>transaction/rollback handling,</li></ul>
+<ul><li>API error handling,</li></ul>
+<ul><li>Calendar/PostgreSQL synchronization failures,</li></ul>
+<ul><li>rate limiting,</li></ul>
+<ul><li>authentication,</li></ul>
+<ul><li>audit logging.</li></ul></section><section class="project-section"><h2>Security &amp; Privacy</h2><p>The workflow prompt instructs the assistant to collect only scheduling</p>
+<p>information, and not to reveal internal workflow details.</p>
+<p>For a public GitHub repository, sanitize the workflow export before</p>
+<p>publishing it.</p>
+<p>Do not expose:</p>
+<ul><li>API keys,</li></ul>
+<ul><li>OAuth access/refresh tokens,</li></ul>
+<ul><li>database passwords,</li></ul>
+<ul><li>private credentials,</li></ul>
+<ul><li>real customer conversations,</li></ul>
+<ul><li>private phone numbers,</li></ul>
+<ul><li>private calendar information,</li></ul>
+<ul><li>production database records.</li></ul>
+<p>Use test/demo data in screenshots.</p></section><section class="project-section"><h2>Outcome</h2><p>The project demonstrates an end-to-end conversational automation where a WhatsApp</p>
+<p>user can provide meeting information naturally, while the AI Agent manages memory,</p>
+<p>validation, availability checks, confirmation, database storage, and calendar scheduling.</p>
+<p>The key technical value is the integration of AI + persistent memory +</p>
+<p>PostgreSQL + Google Calendar + WhatsApp + n8n tool calling into one</p>
+<p>controlled workflow.</p></section><section class="project-section"><h2>Visual walkthrough</h2><p>Selected screenshots from the supplied project materials.</p><div class="project-grid"><a class="project-card-link" href="../assets/projects/whatsapp-ai-meeting-scheduler/WorkFlow.png" target="_blank" rel="noopener"><img src="../assets/projects/whatsapp-ai-meeting-scheduler/WorkFlow.png" alt="WorkFlow screenshot" loading="lazy"><div class="caption">WorkFlow<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/whatsapp-ai-meeting-scheduler/Whatsapp Trigger.png" target="_blank" rel="noopener"><img src="../assets/projects/whatsapp-ai-meeting-scheduler/Whatsapp Trigger.png" alt="Whatsapp Trigger screenshot" loading="lazy"><div class="caption">Whatsapp Trigger<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/whatsapp-ai-meeting-scheduler/Conversation with AI 01.png" target="_blank" rel="noopener"><img src="../assets/projects/whatsapp-ai-meeting-scheduler/Conversation with AI 01.png" alt="Conversation with AI 01 screenshot" loading="lazy"><div class="caption">Conversation with AI 01<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/whatsapp-ai-meeting-scheduler/Postman for Testing.png" target="_blank" rel="noopener"><img src="../assets/projects/whatsapp-ai-meeting-scheduler/Postman for Testing.png" alt="Postman for Testing screenshot" loading="lazy"><div class="caption">Postman for Testing<span>↗</span></div></a></div></section></div></main><footer class="project-footer"><div class="project-footer-box"><div><h2>Back to the portfolio</h2><p>Explore the rest of Muhammad Hassaan Irshad's work and experience.</p></div><a class="btn btn-primary" href="../index.html#projects">View All Projects →</a></div></footer><script src="../script.js"></script></body></html>
