@@ -1,0 +1,380 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="AI-Powered CV Analyzer — Muhammad Hassaan Irshad project case study."><title>AI-Powered CV Analyzer | Muhammad Hassaan Irshad</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../style.css"></head><body class="project-page"><div class="scroll-progress" id="scrollProgress"></div><header class="navbar" id="navbar"><a class="brand" href="../index.html#home" aria-label="Muhammad Hassaan Irshad home"><span class="brand-mark">MH</span><span class="brand-name">Muhammad Hassaan Irshad</span></a><button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button><nav class="nav-links" id="navLinks"><a href="../index.html#home">Home</a><a href="../index.html#about">About</a><a href="../index.html#skills">Skills</a><a class="active" href="../index.html#projects">Projects</a><a href="../index.html#experience">Experience</a><a href="../index.html#contact">Contact</a></nav><a class="nav-cta" href="../index.html#contact">Let's Connect <span>↗</span></a></header><main class="project-main"><section class="project-hero"><div class="project-hero-inner"><div><a class="project-back" href="../index.html#projects">← Back to Projects</a><div class="project-eyebrow">02 · AI AUTOMATION / RESUME ANALYSIS</div><h1>AI-Powered CV Analyzer</h1><p class="project-lead">AI analysis of CV content with structured extraction and delivery through workflow-connected services.</p><div class="tags"><span>Case Study</span><span>Workflow</span><span>Architecture</span><span>Screenshots</span></div></div><div class="project-hero-shot"><img src="../assets/projects/ai-resume-scanner/Actual Workflow.png" alt="AI-Powered CV Analyzer workflow screenshot"></div></div></section><div class="project-content"><section class="project-section"><h2>Project Summary</h2><h4>Project</h4>
+<p>AI Resume Scanner</p>
+<h4>Category</h4>
+<p>AI Automation / Recruitment Automation</p>
+<h4>Platform</h4>
+<p>n8n</p>
+<h4>Objective</h4>
+<p>The objective of this project is to automate the first stage of screening</p>
+<p>resumes that come in through a recruitment form.</p>
+<p>The workflow ties together a candidate intake process with Google Workspace,</p>
+<p>Google Drive, Gemini, Gmail, and WhatsApp to enable a submitted resume to be</p>
+<p>retrieved, analyzed, recorded and communicated.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>The Problem</h2><p>Initial screening of resumes can be a repetitive task when dealing with high volumes</p>
+<p>of applications.</p>
+<p>A manual process would involve for each application:</p>
+<ol><li>opening the application,</li></ol>
+<ol><li>finding the candidate&#x27;s CV,</li></ol>
+<ol><li>reviewing the candidate&#x27;s resume,</li></ol>
+<ol><li>identifying relevant skills and experience,</li></ol>
+<ol><li>making a record of the evaluation,</li></ol>
+<ol><li>and communicating the outcome.</li></ol>
+<p>The project aims to address this first level review task by implementing an</p>
+<p>automated AI-assisted screening process.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Solution</h2><p>The proposed solution is built using n8n as the core orchestrator:</p>
+<pre><code>
+Google Form
+
+↓
+
+Google Sheets
+
+↓
+
+n8n Google Sheets Trigger
+
+↓
+
+Status Check
+
+↓
+
+Google Drive — Download CV
+
+↓
+
+Gemini 2.5 Flash — Resume Analysis
+
+↓
+
+Conditional Evaluation
+
+↓
+
+Google Sheets Update
+
+├───────────────┐
+
+↓        ↓
+
+Gmail     WhatsApp
+</code></pre>
+<p>The workflow is designed to bring together multiple platforms in a recruitment</p>
+<p>automation solution.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Input</h2><p>The workflow uses the candidate information record from the Google Sheets response</p>
+<p>sheet.</p>
+<p>The exported workflow refers to the following fields:</p>
+<ul><li>Timestamp</li></ul>
+<ul><li>Name</li></ul>
+<ul><li>Email</li></ul>
+<ul><li>CV</li></ul>
+<ul><li>Processed</li></ul>
+<ul><li>Short_Listed</li></ul>
+<p>The <code>CV</code> field is used to store the Google Drive file identifier for the</p>
+<p>submitted resume.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Automation Process</h2><h4>Step 1 --- Detect a submission</h4>
+<p>The Google Sheets Trigger reads the response sheet every minute looking for new</p>
+<p>submissions.</p>
+<p>It then passes the candidate data to the next step in the workflow.</p>
+<h4>Step 2 --- Check processing status</h4>
+<p>An IF node checks the value of the <code>Processed</code> field.</p>
+<p>The exported workflow currently looks for a <code>Yes</code> value in this field.</p>
+<p>This should be reviewed in the production version of the portfolio workflow since</p>
+<p>it is more likely that an automation would want to trigger on rows that have NOT</p>
+<p>been processed.</p>
+<h4>Step 3 --- Retrieve the CV</h4>
+<p>The Google Drive node retrieves the file identified by the <code>CV</code> field value.</p>
+<p>This allows the workflow to pass the resume file to the Gemini node for analysis.</p>
+<h4>Step 4 --- Analyze the resume with AI</h4>
+<p>The Gemini 2.5 Flash model analyzes the resume according to the prompt specified in</p>
+<p>the workflow.</p>
+<p>The prompt asks the model to evaluate the candidate for the position of AI</p>
+<p>Automation Engineer.</p>
+<p>The requested information includes:</p>
+<ul><li>relevant technical skills,</li></ul>
+<ul><li>automation tools,</li></ul>
+<ul><li>AI/LLM experience,</li></ul>
+<ul><li>professional experience,</li></ul>
+<ul><li>automation projects,</li></ul>
+<ul><li>integration skills,</li></ul>
+<ul><li>problem-solving capabilities,</li></ul>
+<ul><li>communication competencies,</li></ul>
+<ul><li>documentation skills,</li></ul>
+<ul><li>and role relevance.</li></ul>
+<p>The model is requested to provide a score from 0 to 100 with an explanation of the</p>
+<p>reasoning, strengths, missing skills, and relevant projects.</p>
+<h4>Step 5 --- Apply conditional logic</h4>
+<p>The workflow converts the returned value to a number and checks if it is greater</p>
+<p>than 2 before proceeding to the next steps.</p>
+<p>The conditional value of 2 is part of the currently exported workflow and should be</p>
+<p>reviewed if this is intended to represent a shortlist threshold.</p>
+<h4>Step 6 --- Update the candidate record</h4>
+<p>The workflow then updates the original Google Sheets record with the results of</p>
+<p>the AI analysis.</p>
+<p>It sets the following values:</p>
+<pre><code>
+Processed = Yes
+
+Short_Listed = AI analysis
+</code></pre>
+<p>It also retains the timestamp, name, email, and CV for the candidate.</p>
+<p>The update operation is performed using the timestamp as a unique identifier.</p>
+<h4>Step 7 --- Send notifications</h4>
+<p>The workflow sends two types of notifications:</p>
+<p>Gmail</p>
+<p>A Gmail node sends an email with the subject of <code>Selected Candidate</code>.</p>
+<p>WhatsApp</p>
+<p>A Green-API WhatsApp node sends a message indicating that the resume has been</p>
+<p>scanned.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>AI Prompt Design</h2><p>One of the most important elements of this workflow is the design of the prompt sent</p>
+<p>to the Gemini model.</p>
+<p>The prompt does not ask the model to provide an unrestricted evaluation.</p>
+<p>Rather, it specifies the target role and the information required for consideration.</p>
+<p>The model is asked to evaluate the following:</p>
+<pre><code>
+Technical skills
+
+Professional experience
+
+Automation / AI experience
+
+Projects
+
+Problem-solving
+
+Integration skills
+
+Communication
+
+Documentation
+
+Role relevance
+</code></pre>
+<p>It is then requested to provide the following information:</p>
+<pre><code>
+Score
+
+Short reason
+
+Key strengths
+
+Missing / weak skills
+
+Relevant experience / projects
+</code></pre>
+<p>Finally, the model is instructed to base the evaluation only on information</p>
+<p>explicitly provided in the resume.</p>
+<p>This should prevent the model from assuming skills or experience not stated by</p>
+<p>the candidate.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Integrations</h2><h4>n8n</h4>
+<p>The core automation orchestrator.</p>
+<h4>Google Sheets</h4>
+<p>The candidate response and result tracking layer.</p>
+<h4>Google Drive</h4>
+<p>The source of the submitted resume file.</p>
+<h4>Gemini</h4>
+<p>The AI resume screening engine.</p>
+<h4>Gmail</h4>
+<p>Email notification engine.</p>
+<h4>Green-API / WhatsApp</h4>
+<p>WhatsApp notification engine.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Technical Skills Demonstrated</h2><p>This project demonstrates the following technical competencies:</p>
+<h4>Workflow Automation</h4>
+<ul><li>n8n</li></ul>
+<ul><li>triggers</li></ul>
+<ul><li>conditional branching</li></ul>
+<ul><li>node connectivity</li></ul>
+<ul><li>execution sequencing</li></ul>
+<h4>AI Automation</h4>
+<ul><li>Gemini</li></ul>
+<ul><li>prompt engineering</li></ul>
+<ul><li>document analysis</li></ul>
+<ul><li>score generation</li></ul>
+<ul><li>grounded evaluation</li></ul>
+<h4>Google Workspace</h4>
+<ul><li>Sheets</li></ul>
+<ul><li>Drive</li></ul>
+<ul><li>Gmail</li></ul>
+<h4>Data Handling</h4>
+<ul><li>field mapping</li></ul>
+<ul><li>expression parsing</li></ul>
+<ul><li>spreadsheet updating</li></ul>
+<ul><li>file identifiers</li></ul>
+<ul><li>temporal matching</li></ul>
+<h4>Communication Automation</h4>
+<ul><li>email notifications</li></ul>
+<ul><li>WhatsApp alerts</li></ul>
+<h4>Integration Architecture</h4>
+<p>The ability to tie multiple disparate systems together into a unified business</p>
+<p>process.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Business Value</h2><p>The automation provides value by reducing the amount of repetitive and time-</p>
+<p>consuming tasks involved in the first-stage screening of job applications.</p>
+<p>Rather than having a recruiter manually perform each action, the workflow handles:</p>
+<ul><li>retrieving the CV,</li></ul>
+<ul><li>initial screening,</li></ul>
+<ul><li>recording the outcome,</li></ul>
+<ul><li>and sending notifications.</li></ul>
+<p>The recruiter can use the information generated by the workflow for further</p>
+<p>consideration and additional actions.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Error Handling &amp; Production Improvements</h2><p>The currently exported workflow serves as a working prototype but would benefit</p>
+<p>from several production improvements before being used in a live environment.</p>
+<h4>Processing State</h4>
+<p>The current processing state logic should be reviewed to ensure that processed rows</p>
+<p>do not enter the processing pipeline a second time.</p>
+<h4>Score Threshold</h4>
+<p>The current score threshold check only looks for values above 2.</p>
+<p>Since the prompt asks for a 0-100 score, this should also be reviewed if the</p>
+<p>intention is to use this as a shortlisting criterion.</p>
+<h4>Structured AI Output</h4>
+<p>The currently captured AI output is stored as text within the <code>Short_Listed</code></p>
+<p>column.</p>
+<p>In a production version, it would be better to capture this information using</p>
+<p>structured fields such as:</p>
+<pre><code>
+Score
+
+Summary
+
+Strengths
+
+Missing Skills
+
+Relevant Experience
+
+Recommendation Status
+</code></pre>
+<h4>Error Branches</h4>
+<p>The workflow could benefit from additional error handling such as:</p>
+<ul><li>missing CVs,</li></ul>
+<ul><li>invalid file IDs,</li></ul>
+<ul><li>Gemini failures,</li></ul>
+<ul><li>malformed AI responses,</li></ul>
+<ul><li>Google Sheets update errors,</li></ul>
+<ul><li>and notification failures.</li></ul>
+<h4>Human Review</h4>
+<p>The AI analysis should be used as a recommendation rather than an absolute</p>
+<p>selection or rejection criterion.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Security &amp; Privacy</h2><p>Resume data often contains sensitive and personal information.</p>
+<p>When publishing to a public GitHub repository:</p>
+<ul><li>remove API keys,</li></ul>
+<ul><li>remove OAuth secrets,</li></ul>
+<ul><li>remove access tokens,</li></ul>
+<ul><li>remove passwords,</li></ul>
+<ul><li>remove private environment variables,</li></ul>
+<ul><li>avoid exposing private candidate records,</li></ul>
+<ul><li>avoid publishing real candidate resumes,</li></ul>
+<ul><li>sanitize screenshots,</li></ul>
+<ul><li>use test/demo data.</li></ul>
+<p>The currently exported workflow includes credential references and configuration</p>
+<p>identifiers that should also be reviewed before publication.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Project Outcome</h2><p>The project demonstrates an end-to-end AI-powered automation workflow that follows</p>
+<p>this general pattern:</p>
+<pre><code>
+Candidate Data
+
+↓
+
+Automated Trigger
+
+↓
+
+File Retrieval
+
+↓
+
+AI Analysis
+
+↓
+
+Conditional Logic
+
+↓
+
+Database/Sheet Update
+
+↓
+
+Multi-channel Notification
+</code></pre>
+<p>The value of the project lies not only in the use of the AI model itself but in the</p>
+<p>ability to combine different tools together into a coherent automated process.</p>
+<p>------------------------------------------------------------------------</p></section><section class="project-section"><h2>Final Architecture</h2><pre><code>
+CANDIDATE
+
+│
+
+▼
+
+GOOGLE FORM
+
+│
+
+▼
+
+GOOGLE SHEETS
+
+│
+
+▼
+
+┌──────────────────┐
+
+│ n8n TRIGGER   │
+
+│ Every Minute  │
+
+└────────┬─────────┘
+
+│
+
+▼
+
+STATUS CHECK
+
+│
+
+▼
+
+┌──────────────────┐
+
+│  GOOGLE DRIVE  │
+
+│  Download CV  │
+
+└────────┬─────────┘
+
+│
+
+▼
+
+┌──────────────────┐
+
+│ GEMINI 2.5 FLASH │
+
+│ Resume Analysis  │
+
+└────────┬─────────┘
+
+│
+
+▼
+
+SCORE CHECK
+
+│
+
+┌────────┴─────────┐
+
+▼         ▼
+
+GOOGLE SHEETS     NOTIFY
+
+UPDATE     ┌──────┴──────┐
+
+▼       ▼
+
+GMAIL    WHATSAPP
+</code></pre></section><section class="project-section"><h2>Project Positioning</h2><p>AI Resume Scanner is an AI recruitment assistant project that demonstrates the</p>
+<p>integration of workflow automation, document processing, large language model</p>
+<p>analysis, Google Workspace, conditional logic, data mapping, and multi-channel</p>
+<p>notifications using n8n.</p></section><section class="project-section"><h2>Visual walkthrough</h2><p>Selected screenshots from the supplied project materials.</p><div class="project-grid"><a class="project-card-link" href="../assets/projects/ai-resume-scanner/Actual Workflow.png" target="_blank" rel="noopener"><img src="../assets/projects/ai-resume-scanner/Actual Workflow.png" alt="Actual Workflow screenshot" loading="lazy"><div class="caption">Actual Workflow<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/ai-resume-scanner/Google Form.png" target="_blank" rel="noopener"><img src="../assets/projects/ai-resume-scanner/Google Form.png" alt="Google Form screenshot" loading="lazy"><div class="caption">Google Form<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/ai-resume-scanner/Google Sheet of records.png" target="_blank" rel="noopener"><img src="../assets/projects/ai-resume-scanner/Google Sheet of records.png" alt="Google Sheet of records screenshot" loading="lazy"><div class="caption">Google Sheet of records<span>↗</span></div></a><a class="project-card-link" href="../assets/projects/ai-resume-scanner/Postman for testing.png" target="_blank" rel="noopener"><img src="../assets/projects/ai-resume-scanner/Postman for testing.png" alt="Postman for testing screenshot" loading="lazy"><div class="caption">Postman for testing<span>↗</span></div></a></div></section></div></main><footer class="project-footer"><div class="project-footer-box"><div><h2>Back to the portfolio</h2><p>Explore the rest of Muhammad Hassaan Irshad's work and experience.</p></div><a class="btn btn-primary" href="../index.html#projects">View All Projects →</a></div></footer><script src="../script.js"></script></body></html>
